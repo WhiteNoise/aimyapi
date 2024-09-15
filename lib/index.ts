@@ -38,7 +38,7 @@ export interface GenerateCodeResult {
 }
 
 // FIXME: add an options parameter and allow specifying the token limit
-export const generateCode = async function(queryText:string, userChatHistory:ChatCompletionRequestMessage[], createTaskPrompt:string, apiPath:string, debug:boolean = false): Promise<GenerateCodeResult> {
+export const generateCode = async function(queryText:string, userChatHistory:ChatCompletionRequestMessage[], createTaskPrompt:string, apiPath:string, debug:boolean = false, model="gpt-4o"): Promise<GenerateCodeResult> {
     if(!queryText)
         return { code: '', loggableCode: '' };
 
@@ -58,7 +58,7 @@ export const generateCode = async function(queryText:string, userChatHistory:Cha
     ];
     try {
         const results = await openai.createChatCompletion({
-            model: "gpt-3.5-turbo",
+            model,
             messages: messages,
             temperature: 0.1,
             max_tokens: 700,
@@ -104,6 +104,7 @@ export interface AIMyAPIOptions {
     apiGlobalName?: string;    
     apiDocsPath?: string;
     debug?: boolean;
+    model?: string;
 };
 
 export interface AIMyAPIInstance {
@@ -122,7 +123,8 @@ async function createWithAPI(options:AIMyAPIOptions): Promise<AIMyAPIInstance> {
         apiGlobalName: "api",
         apiGlobals: {},
         apiWhitelist: Object.getOwnPropertyNames(Object.getPrototypeOf(options.apiObject)).filter((f) => f !== "constructor" && !f.startsWith("_")),
-        debug: false,
+        debug: false, 
+        model: "gpt-4o",
         ...options
     } as AIMyAPIOptions;
 
@@ -130,7 +132,7 @@ async function createWithAPI(options:AIMyAPIOptions): Promise<AIMyAPIInstance> {
         throw new Error("apiObject and apiFilePath are required");
     }
 
-    const {apiObject, apiWhitelist, apiGlobalName, apiExports, apiDefFilePath, apiDocsPath, debug} = options;
+    const {apiObject, apiWhitelist, apiGlobalName, apiExports, apiDefFilePath, apiDocsPath, debug, model} = options;
 
     const createTaskPrompt = createBasePrompt( apiDefFilePath, apiDocsPath);
 
@@ -140,7 +142,7 @@ async function createWithAPI(options:AIMyAPIOptions): Promise<AIMyAPIInstance> {
             if(!queryText)
                 return { code: '', loggableCode: '' };
 
-            return await generateCode(queryText, userChatHistory, createTaskPrompt.replace("{{CONTEXT}}", currentContext ? "```" + JSON.stringify(currentContext, null, 2) + "```" : ""), apiDefFilePath, debug);
+            return await generateCode(queryText, userChatHistory, createTaskPrompt.replace("{{CONTEXT}}", currentContext ? "```" + JSON.stringify(currentContext, null, 2) + "```" : ""), apiDefFilePath, debug, model);
         },
         runCode: async function(generatedCode:string) {
             if(!QuickJS) {
