@@ -30,7 +30,7 @@ function createBasePrompt(apiFilePath, documentationPath) {
 }
 exports.createBasePrompt = createBasePrompt;
 // FIXME: add an options parameter and allow specifying the token limit
-const generateCode = async function (queryText, userChatHistory, createTaskPrompt, apiPath, debug = false) {
+const generateCode = async function (queryText, userChatHistory, createTaskPrompt, apiPath, debug = false, model = "gpt-4o") {
     if (!queryText)
         return { code: '', loggableCode: '' };
     let generatedCode = '';
@@ -49,7 +49,7 @@ const generateCode = async function (queryText, userChatHistory, createTaskPromp
     ];
     try {
         const results = await openai.createChatCompletion({
-            model: "gpt-3.5-turbo",
+            model,
             messages: messages,
             temperature: 0.1,
             max_tokens: 700,
@@ -86,19 +86,20 @@ async function createWithAPI(options) {
         apiGlobals: {},
         apiWhitelist: Object.getOwnPropertyNames(Object.getPrototypeOf(options.apiObject)).filter((f) => f !== "constructor" && !f.startsWith("_")),
         debug: false,
+        model: "gpt-4o",
         ...options
     };
     if (!options.apiObject || !options.apiDefFilePath) {
         throw new Error("apiObject and apiFilePath are required");
     }
-    const { apiObject, apiWhitelist, apiGlobalName, apiExports, apiDefFilePath, apiDocsPath, debug } = options;
+    const { apiObject, apiWhitelist, apiGlobalName, apiExports, apiDefFilePath, apiDocsPath, debug, model } = options;
     const createTaskPrompt = createBasePrompt(apiDefFilePath, apiDocsPath);
     return {
         options,
         generateCode: async function (queryText, userChatHistory, currentContext = undefined) {
             if (!queryText)
                 return { code: '', loggableCode: '' };
-            return await (0, exports.generateCode)(queryText, userChatHistory, createTaskPrompt.replace("{{CONTEXT}}", currentContext ? "```" + JSON.stringify(currentContext, null, 2) + "```" : ""), apiDefFilePath, debug);
+            return await (0, exports.generateCode)(queryText, userChatHistory, createTaskPrompt.replace("{{CONTEXT}}", currentContext ? "```" + JSON.stringify(currentContext, null, 2) + "```" : ""), apiDefFilePath, debug, model);
         },
         runCode: async function (generatedCode) {
             if (!QuickJS) {

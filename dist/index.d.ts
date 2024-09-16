@@ -6,7 +6,7 @@ export interface GenerateCodeResult {
     loggableCode: string;
     rawResponse?: string;
 }
-export declare const generateCode: (queryText: string, userChatHistory: ChatCompletionRequestMessage[], createTaskPrompt: string, apiPath: string, debug?: boolean) => Promise<GenerateCodeResult>;
+export declare const generateCode: (queryText: string, userChatHistory: ChatCompletionRequestMessage[], createTaskPrompt: string, apiPath: string, debug?: boolean, model?: string) => Promise<GenerateCodeResult>;
 export interface AIMyAPIOptions {
     apiObject: object;
     apiExports: object;
@@ -16,6 +16,7 @@ export interface AIMyAPIOptions {
     apiGlobalName?: string;
     apiDocsPath?: string;
     debug?: boolean;
+    model?: string;
 }
 export interface AIMyAPIInstance {
     options: AIMyAPIOptions;
