@@ -1,10 +1,10 @@
 import { ChatCompletionRequestMessage } from "openai";
-import { delay } from "../lib/utils";
+import { delay } from "../src/utils";
 import {
-	Customization,
-	Menu,
-	MenuItemBase,
-	OrderingAPIInterface,
+    Customization,
+    Menu,
+    MenuItemBase,
+    OrderingAPIInterface,
 } from "./ordering_api";
 
 // TODO: make functions to print out an item, and print out the current order with the price totals.

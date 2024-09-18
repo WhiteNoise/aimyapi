@@ -1,5 +1,5 @@
 import path from "path";
-import AIMyAPI, { GenerateCodeResult } from "../lib";
+import AIMyAPI, { GenerateCodeResult } from "../src";
 import * as APIExports from "./ordering_api";
 import { OrderingAPI } from "./ordering_api_impl";
 

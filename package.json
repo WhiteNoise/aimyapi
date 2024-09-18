@@ -1,17 +1,28 @@
 {
   "name": "aimyapi",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "AI My API! Use LLMs to create small programs that safely* run and make calls against your API. Similar to ChatGPT's Code Interpreter.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "module": "./dist/index.mjs",  
+  "exports": {
+    "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+    },
+    "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+    }
+  },
   "directories": {
     "lib": "lib"
   },
   "scripts": {
-    "example1": "ts-node ./example/example1.ts",
-    "example2": "ts-node ./example/example2.ts",
-    "example3": "ts-node ./example/example3.ts",
-    "build": "tsc"
+    "example1": "tsx ./example/example1.ts",
+    "example2": "tsx ./example/example2.ts",
+    "example3": "tsx ./example/example3.ts",
+    "build": "pkgroll"
   },
   "repository": {
     "type": "git",
@@ -24,7 +35,7 @@
   ],
   "dependencies": {
     "dotenv": "^16.0.3",
-    "openai": "^3.2.1",
+    "openai": "^4.61.0",
     "quickjs-emscripten": "^0.22.0",
     "typescript": "^5.0.3"
   },
@@ -36,6 +47,7 @@
   "homepage": "https://github.com/WhiteNoise/aimyapi#readme",
   "devDependencies": {
     "@types/node": "^18.16.2",
-    "ts-node": "^10.9.1"
+    "pkgroll": "^2.5.0",
+    "tsx": "^4.19.1"
   }
 }

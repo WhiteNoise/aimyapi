@@ -11,7 +11,7 @@ Here is the API that you will use:
 
 Documentation:
 
-Note: the api definitions are available as `ApiDefs`;
+Note: the api definitions are available as `ApiDefs`.
 
 {{DOCUMENTATION}}
 

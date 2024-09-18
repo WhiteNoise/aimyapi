@@ -13,7 +13,7 @@ export interface APIInterface {
     sendEmail(to: string, subject: string, body: string): Promise<void>;
 
     getSalesData(): SalesData[];
-    // Returns an array of sales data.
+    // Returns an array of sales data. 
 
     print(text: string): void;
     // Prints the specified text to the user.

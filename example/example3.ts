@@ -1,8 +1,8 @@
 
-import AIMyAPI from "../lib";
-import { OrderingAPI } from "./ordering_api_impl";
-import * as APIExports from "./ordering_api";
 import path from "path";
+import AIMyAPI from "../src";
+import * as APIExports from "./ordering_api";
+import { OrderingAPI } from "./ordering_api_impl";
 
 import readline from 'readline';
 

@@ -1,18 +1,18 @@
 require('dotenv').config()
 import fs from 'fs';
-import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from "openai";
+import { OpenAI } from "openai";
 import path from 'path';
 
 import createSandbox from "./sandbox";
 import { rejectOpenPromises } from './sandbox-wrappers';
 
+import { ChatCompletionMessageParam } from 'openai/resources/index.mjs';
 import { QuickJSWASMModule, getQuickJS } from "quickjs-emscripten";
 
-const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY // This is also the default, can be omitted
   });
 
-const openai = new OpenAIApi(configuration);
 
 // function formatObject(obj: any): string {
 //     return Object.keys(obj).reduce((acc, key) => {
@@ -38,13 +38,13 @@ export interface GenerateCodeResult {
 }
 
 // FIXME: add an options parameter and allow specifying the token limit
-export const generateCode = async function(queryText:string, userChatHistory:ChatCompletionRequestMessage[], createTaskPrompt:string, apiPath:string, debug:boolean = false, model="gpt-4o"): Promise<GenerateCodeResult> {
+export const generateCode = async function(queryText:string, userChatHistory:ChatCompletionMessageParam[], createTaskPrompt:string, apiPath:string, debug:boolean = false, model="gpt-4o"): Promise<GenerateCodeResult> {
     if(!queryText)
         return { code: '', loggableCode: '' };
 
     let generatedCode = '';
     const prompt = createTaskPrompt.replace("{{QUERY_TEXT}}", queryText);
-    const messages:ChatCompletionRequestMessage[] = [
+    const messages:ChatCompletionMessageParam[] = [
         {
             role: "system",
             content: prompt,
@@ -57,18 +57,18 @@ export const generateCode = async function(queryText:string, userChatHistory:Cha
         }
     ];
     try {
-        const results = await openai.createChatCompletion({
+        const results = await openai.chat.completions.create({
             model,
             messages: messages,
-            temperature: 0.1,
+            temperature: 0.0,
             max_tokens: 700,
             }
         );
 
         if(debug)
-            console.log(results.data.usage);
+            console.log(results.usage);
         
-        const response = results.data.choices[0].message.content;
+        const response = results.choices[0].message.content;
 
         if(debug)
             console.log(response);
@@ -110,7 +110,7 @@ export interface AIMyAPIOptions {
 export interface AIMyAPIInstance {
     // see xample 2
     options:AIMyAPIOptions;
-    generateCode: (queryText:string, userChatHistory:ChatCompletionRequestMessage[]) => Promise<GenerateCodeResult>;
+    generateCode: (queryText:string, userChatHistory:ChatCompletionMessageParam[]) => Promise<GenerateCodeResult>;
     runCode: (task:string) => Promise<void>;
     // run a single request with no history
     processRequest: (userQuery:string, context?: object) => Promise<GenerateCodeResult>;
@@ -138,7 +138,7 @@ async function createWithAPI(options:AIMyAPIOptions): Promise<AIMyAPIInstance> {
 
     return {
         options,
-        generateCode: async function(queryText:string, userChatHistory:ChatCompletionRequestMessage[], currentContext:any = undefined) {
+        generateCode: async function(queryText:string, userChatHistory:ChatCompletionMessageParam[], currentContext:any = undefined) {
             if(!queryText)
                 return { code: '', loggableCode: '' };
 
@@ -228,11 +228,11 @@ export interface AIMyAPIModuleExports {
     createWithAPI: (options:AIMyAPIOptions) => Promise<AIMyAPIInstance>;
     
     createBasePrompt: (apiFilePath:string, documentationPath: string) => string;
-    generateCode: (queryText:string, userChatHistory:ChatCompletionRequestMessage[], createTaskPrompt:string, apiPath:string, debug:boolean) => Promise<GenerateCodeResult>;
+    generateCode: (queryText:string, userChatHistory:ChatCompletionMessageParam[], createTaskPrompt:string, apiPath:string, debug:boolean) => Promise<GenerateCodeResult>;
     createSandbox: (QuickJS:QuickJSWASMModule, globals: any) => Promise<any>;
 }
 
-const aimyapi:AIMyAPIModuleExports = {
+export const aimyapi:AIMyAPIModuleExports = {
     // Standard way of using the library
     createWithAPI,      
 
@@ -241,5 +241,3 @@ const aimyapi:AIMyAPIModuleExports = {
     generateCode,
     createSandbox,
 }
-
- export default aimyapi;

@@ -1,35 +1,13 @@
-'use strict';
-
-var module$1 = require('module');
-var fs = require('fs');
-var openai$1 = require('openai');
-var path = require('path');
-var quickjsEmscripten = require('quickjs-emscripten');
-var ts = require('typescript');
-
-var _documentCurrentScript = typeof document !== 'undefined' ? document.currentScript : null;
-function _interopNamespaceDefault(e) {
-	var n = Object.create(null);
-	if (e) {
-		Object.keys(e).forEach(function (k) {
-			if (k !== 'default') {
-				var d = Object.getOwnPropertyDescriptor(e, k);
-				Object.defineProperty(n, k, d.get ? d : {
-					enumerable: true,
-					get: function () { return e[k]; }
-				});
-			}
-		});
-	}
-	n.default = e;
-	return Object.freeze(n);
-}
-
-var ts__namespace = /*#__PURE__*/_interopNamespaceDefault(ts);
+import { createRequire } from 'module';
+import fs from 'fs';
+import { OpenAI } from 'openai';
+import path from 'path';
+import { getQuickJS } from 'quickjs-emscripten';
+import * as ts from 'typescript';
 
 var require$1 = (
-			false
-				? /* @__PURE__ */ module$1.createRequire((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.src || new URL('index.js', document.baseURI).href)))
+			true
+				? /* @__PURE__ */ createRequire(import.meta.url)
 				: require
 		);
 
@@ -222,12 +200,12 @@ function tsCompile(source, options = null) {
   if (null === options) {
     options = {
       compilerOptions: {
-        target: ts__namespace.ScriptTarget.ES2020,
-        module: ts__namespace.ModuleKind.None
+        target: ts.ScriptTarget.ES2020,
+        module: ts.ModuleKind.None
       }
     };
   }
-  return ts__namespace.transpileModule(source, options).outputText;
+  return ts.transpileModule(source, options).outputText;
 }
 async function createSandbox(QuickJS, requireLookup = {}, globals = {}, debug = false) {
   const vm = QuickJS.newContext();
@@ -336,7 +314,7 @@ async function createSandbox(QuickJS, requireLookup = {}, globals = {}, debug = 
 }
 
 require$1("dotenv").config();
-const openai = new openai$1.OpenAI({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
   // This is also the default, can be omitted
 });
@@ -424,7 +402,7 @@ async function createWithAPI(options) {
       if (!QuickJS) {
         if (debug)
           console.log("Creating quick.js");
-        QuickJS = await quickjsEmscripten.getQuickJS();
+        QuickJS = await getQuickJS();
       }
       let apiGlobals = {};
       for (const key in options.apiGlobals) {
@@ -487,6 +465,4 @@ const aimyapi = {
   createSandbox
 };
 
-exports.aimyapi = aimyapi;
-exports.createBasePrompt = createBasePrompt;
-exports.generateCode = generateCode;
+export { aimyapi, createBasePrompt, generateCode };

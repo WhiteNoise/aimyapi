@@ -1,4 +1,4 @@
-import { delay } from "../lib/utils";
+import { delay } from "../src/utils";
 import { APIInterface, SalesData } from "./sales_api";
 
 export class API implements APIInterface {
