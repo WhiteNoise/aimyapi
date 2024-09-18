@@ -478,7 +478,7 @@ async function createWithAPI(options) {
     }
   };
 }
-const aimyapi = {
+const AIMyAPI = {
   // Standard way of using the library
   createWithAPI,
   // functions for customized usage
@@ -487,6 +487,6 @@ const aimyapi = {
   createSandbox
 };
 
-exports.aimyapi = aimyapi;
+exports.AIMyAPI = AIMyAPI;
 exports.createBasePrompt = createBasePrompt;
 exports.generateCode = generateCode;

@@ -68,7 +68,7 @@ api.print("I'm great, thanks for asking!");
 Instantiate your api and AIMyAPI. AIMyAPI will wrap your API so that it can be called from within the QuickJS sandbox.
 
 ```
-import AIMyAPI from "aimyapi"
+import { AIMyAPI } from "aimyapi"
 
 const api = new API();
 
@@ -184,7 +184,7 @@ npm run example1
 ```
 
 ```
-import AIMyAPI from "../lib";
+import { AIMyAPI } from "../lib";
 import { API } from "./sales_api_impl";
 import * as APIExports from "./sales_api";
 import path from "path";
@@ -253,7 +253,7 @@ npm run example2
 
 Code:
 ```
-import AIMyAPI from "../lib";
+import { AIMyAPI } from "../lib";
 import { OrderingAPI } from "./ordering_api_impl";
 import * as APIExports from "./ordering_api";
 import path from "path";

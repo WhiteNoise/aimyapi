@@ -1,6 +1,6 @@
 
 import path from "path";
-import AIMyAPI from "../src";
+import { AIMyAPI } from "../src";
 import * as APIExports from "./ordering_api";
 import { OrderingAPI } from "./ordering_api_impl";
 
@@ -38,7 +38,7 @@ function getInput(query): Promise<string> {
         console.log(`Query: ${query}`)
 
         // generate the code for this query
-        const code = await aimyapi.generateCode(query, api._getHistory());
+        const result = await aimyapi.generateCode(query, api._getHistory());
 
         api._addMessageToHistory({
             content: query,
@@ -47,13 +47,13 @@ function getInput(query): Promise<string> {
         });
 
         api._addMessageToHistory({
-            content: '```\n' + code.replace(options.apiDefFilePath, "./api.ts") + '\n```',
+            content: '```\n' + result.code.replace(options.apiDefFilePath, "./api.ts") + '\n```',
             role: "assistant",
             name: "assistant",
         });
 
         // run the code in the sandbox
-        await aimyapi.runCode(code);
+        await aimyapi.runCode(result.code);
     }
    
     console.log("Welcome to the restaurant. You can ask to hear the menu or order something. What would you like to do?");

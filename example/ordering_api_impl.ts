@@ -1,10 +1,10 @@
-import { ChatCompletionRequestMessage } from "openai";
+import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 import { delay } from "../src/utils";
 import {
-    Customization,
-    Menu,
-    MenuItemBase,
-    OrderingAPIInterface,
+	Customization,
+	Menu,
+	MenuItemBase,
+	OrderingAPIInterface,
 } from "./ordering_api";
 
 // TODO: make functions to print out an item, and print out the current order with the price totals.
@@ -14,7 +14,7 @@ export class OrderingAPI implements OrderingAPIInterface {
 	private _lastOrderIdNumber: number = 0;
     public _isCompleted:boolean = false;
 
-	private _history: ChatCompletionRequestMessage[] = [];
+	private _history: ChatCompletionMessageParam[] = [];
 
 	// Mock implementation, doesn't actually send an email
 	sendEmail(to: string, subject: string, body: string): Promise<void> {
@@ -194,11 +194,11 @@ export class OrderingAPI implements OrderingAPIInterface {
 		this.respondToUser(`--\tTotal:\t\t$${this.getOrderTotal().toFixed(2)}`);
 	}
 
-	_addMessageToHistory(message: ChatCompletionRequestMessage) {
+	_addMessageToHistory(message: ChatCompletionMessageParam) {
 		this._history.push(message);
 	}
 
-	_getHistory(): ChatCompletionRequestMessage[] {
+	_getHistory(): ChatCompletionMessageParam[] {
 		return this._history;
 	}
 

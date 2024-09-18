@@ -232,7 +232,7 @@ export interface AIMyAPIModuleExports {
     createSandbox: (QuickJS:QuickJSWASMModule, globals: any) => Promise<any>;
 }
 
-export const aimyapi:AIMyAPIModuleExports = {
+export const AIMyAPI:AIMyAPIModuleExports = {
     // Standard way of using the library
     createWithAPI,      
 

@@ -31,6 +31,6 @@ interface AIMyAPIModuleExports {
     generateCode: (queryText: string, userChatHistory: ChatCompletionMessageParam[], createTaskPrompt: string, apiPath: string, debug: boolean) => Promise<GenerateCodeResult>;
     createSandbox: (QuickJS: QuickJSWASMModule, globals: any) => Promise<any>;
 }
-declare const aimyapi: AIMyAPIModuleExports;
+declare const AIMyAPI: AIMyAPIModuleExports;
 
-export { type AIMyAPIInstance, type AIMyAPIModuleExports, type AIMyAPIOptions, type GenerateCodeResult, aimyapi, createBasePrompt, generateCode };
+export { AIMyAPI, type AIMyAPIInstance, type AIMyAPIModuleExports, type AIMyAPIOptions, type GenerateCodeResult, createBasePrompt, generateCode };
