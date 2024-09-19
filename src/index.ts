@@ -13,19 +13,37 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY // This is also the default, can be omitted
   });
 
+const CODE_START = `\`\`\`
+import * as ApiDefs from 'api.ts'
 
-// function formatObject(obj: any): string {
-//     return Object.keys(obj).reduce((acc, key) => {
-//       return `${acc}${key}:\n${obj[key]}\n\n`;
-//     }, "");
-// }
+(async() {
+    try {`;
+
+const CODE_END = `    } catch(err) { 
+        console.error(err); 
+    }
+})();        
+\`\`\``;
+
+function indentString(str, numTabs) {
+    const tabs = '\t'.repeat(numTabs);
+    return str.split('\n').map(line => tabs + line).join('\n');
+  }
+
+function replaceCodeBlocks(text) {
+    const codeBlockRegex = /```[\s\S]*?```/g;
+    return text.replace(codeBlockRegex, (match) => {
+        const code = match.slice(3, -3).trim();
+        return `${CODE_START}\n${indentString(code, 2)}\n${CODE_END}`;
+});
+}
 
 export function createBasePrompt(apiFilePath:string, documentationPath: string): string {
     const apiText: string = fs.readFileSync(apiFilePath, 'utf8');
     const documentationText: string = documentationPath ? fs.readFileSync(documentationPath, 'utf8') : '';
 
     //console.time("Loading templates");
-    const createTaskPrompt: string = fs.readFileSync( path.join(__dirname, '../prompts/create-task-prompt.md'), 'utf8').replace("{{DOCUMENTATION}}", documentationText).replace("{{API}}", apiText);   
+    const createTaskPrompt: string = fs.readFileSync( path.join(__dirname, '../prompts/create-task-prompt.md'), 'utf8').replace("{{DOCUMENTATION}}", replaceCodeBlocks(documentationText)).replace("{{API}}", apiText);   
     //console.timeEnd("Loading templates")
     
     return createTaskPrompt;

@@ -6,13 +6,5 @@ user: How are you today?
 
 assistant:
 ```
-import * as ApiDefs from 'api.ts'
-
-(async() {
-    try {
-        api.print("I'm great, thanks for asking!");
-    } catch(err) { 
-        console.error(err); 
-    }
-})();        
+api.print("I'm great, thanks for asking!");
 ```
