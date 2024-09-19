@@ -11,11 +11,22 @@ Here is the API that you will use:
 
 Documentation:
 
-Note: the api definitions are available as `ApiDefs`.
+Write your code in this format:
+```
+import * as ApiDefs from 'api.ts'
+
+(async() {
+    try {
+        // ... your code here
+    } catch(err) { 
+        console.error(err); 
+    }
+})();
+```
 
 {{DOCUMENTATION}}
 
-Current Context:
+Contextual data:
 ```
 {{CONTEXT}}
 ```

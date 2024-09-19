@@ -7,7 +7,7 @@ interface GenerateCodeResult {
     loggableCode: string;
     rawResponse?: string;
 }
-declare const generateCode: (queryText: string, userChatHistory: ChatCompletionMessageParam[], createTaskPrompt: string, apiPath: string, debug?: boolean, model?: string) => Promise<GenerateCodeResult>;
+declare const generateCode: (queryText: string, userChatHistory: ChatCompletionMessageParam[], createTaskPrompt: string, debug?: boolean, model?: string) => Promise<GenerateCodeResult>;
 interface AIMyAPIOptions {
     apiObject: object;
     apiExports: object;
@@ -28,7 +28,7 @@ interface AIMyAPIInstance {
 interface AIMyAPIModuleExports {
     createWithAPI: (options: AIMyAPIOptions) => Promise<AIMyAPIInstance>;
     createBasePrompt: (apiFilePath: string, documentationPath: string) => string;
-    generateCode: (queryText: string, userChatHistory: ChatCompletionMessageParam[], createTaskPrompt: string, apiPath: string, debug: boolean) => Promise<GenerateCodeResult>;
+    generateCode: (queryText: string, userChatHistory: ChatCompletionMessageParam[], createTaskPrompt: string, debug: boolean) => Promise<GenerateCodeResult>;
     createSandbox: (QuickJS: QuickJSWASMModule, globals: any) => Promise<any>;
 }
 declare const AIMyAPI: AIMyAPIModuleExports;

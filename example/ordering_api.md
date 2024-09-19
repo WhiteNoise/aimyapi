@@ -10,21 +10,37 @@ user: How are you today?
 
 assistant:
 ```
-orderingApi.respondToUser("I'm great, thanks for asking!");
+import * as ApiDefs from 'api.ts'
+
+(async() {
+    try {
+        orderingApi.respondToUser("I'm great, thanks for asking!");
+    } catch(err) { 
+        console.error(err); 
+    }
+})();        
 ```
 
 user: Add a hamburger with no cheese to my order
 
 assistant:
 ```
-const itemName = "Hamburger";
-const item = ApiDefs.Menu.find((item) => item.name === itemName);
-if (!item) {
-    throw new Error(`Item with name "${itemName}" not found`);
-}
+import * as ApiDefs from 'api.ts'
 
-orderingApi.addItemToOrder(itemName, undefined, item.toppings.filter( topping => topping.name != "cheese") );
-orderingApi.respondToUser("Ok, I added a Hamburger. What else would you like?");
+(async() {
+    try {
+        const itemName = "Hamburger";
+        const item = ApiDefs.Menu.find((item) => item.name === itemName);
+        if (!item) {
+            throw new Error(`Item with name "${itemName}" not found`);
+        }
+
+        orderingApi.addItemToOrder(itemName, undefined, item.toppings.filter( topping => topping.name != "cheese") );
+        orderingApi.respondToUser("Ok, I added a Hamburger. What else would you like?");
+    } catch(err) { 
+        console.error(err); 
+    }
+})();        
 ```
 
 log: Added Hamburger with id 1
@@ -33,22 +49,39 @@ user: I'd like a large pizza with mushrooms
 
 assistant:
 ```
-orderingApi.addItemToOrder("Pizza", ["Large"], ["mushrooms"]);
-orderingApi.respondToUser("Ok, I added a Large Pizza with mushrooms");
+
+import * as ApiDefs from 'api.ts'
+
+(async() {
+    try {
+        orderingApi.addItemToOrder("Pizza", ["Large"], ["mushrooms"]);
+        orderingApi.respondToUser("Ok, I added a Large Pizza with mushrooms");
+    } catch(err) { 
+        console.error(err); 
+    }
+})();        
 ```
 
 user: Add a hamburger with bacon
 
 assistant:
 ```
-const itemName = "Hamburger";
-const item = ApiDefs.Menu.find((item) => item.name === itemName);
-if (!item) {
-    throw new Error(`Item with name "${itemName}" not found`);
-}
+import * as ApiDefs from 'api.ts'
 
-orderingApi.addItemToOrder(itemName, undefined, [...item.toppings, "bacon"]);
-orderingApi.respondToUser("Ok, I added a Hamburger with no cheese or onions. What else would you like?");
+(async() {
+    try {
+        const itemName = "Hamburger";
+        const item = ApiDefs.Menu.find((item) => item.name === itemName);
+        if (!item) {
+            throw new Error(`Item with name "${itemName}" not found`);
+        }
+
+        orderingApi.addItemToOrder(itemName, undefined, [...item.toppings, "bacon"]);
+        orderingApi.respondToUser("Ok, I added a Hamburger with no cheese or onions. What else would you like?");
+    } catch(err) { 
+        console.error(err); 
+    }
+})();        
 ```
 
 log: Added Hamburger with id 2
@@ -57,28 +90,44 @@ user: Add jalapenos to that
 
 assistant: 
 ```
-const existingItem = orderingApi.getItemInOrder("2");
+import * as ApiDefs from 'api.ts'
 
-if(existingItem) {
-    orderingApi.modifyItemInOrder("2", existingItem.customizations.map(item => item.name), [...existingItem.toppings, "jalapenos"]);
-    orderingApi.respondToUser("Ok, I added jalapenos to your Hamburger");
-} else {
-    orderingApi.respondToUser("Hmm, I can't find that item.");
-}
+(async() {
+    try {
+        const existingItem = orderingApi.getItemInOrder("2");
+
+        if(existingItem) {
+            orderingApi.modifyItemInOrder("2", existingItem.customizations.map(item => item.name), [...existingItem.toppings, "jalapenos"]);
+            orderingApi.respondToUser("Ok, I added jalapenos to your Hamburger");
+        } else {
+            orderingApi.respondToUser("Hmm, I can't find that item.");
+        }
+    } catch(err) { 
+        console.error(err); 
+    }
+})();        
 ```
 
 user: Add a hamburger with no lettuce
 
 assistant:
 ```
-const itemName = "Hamburger";
-const item = ApiDefs.Menu.find((item) => item.name === itemName);
-if (!item) {
-    throw new Error(`Item with name "${itemName}" not found`);
-}
+import * as ApiDefs from 'api.ts'
 
-orderingApi.addItemToOrder(itemName, undefined, [...item.toppings.filter(topping => topping != "lettuce")]);
-orderingApi.respondToUser("Ok, I added a Hamburger with no cheese or onions. What else would you like?");
+(async() {
+    try {
+        const itemName = "Hamburger";
+        const item = ApiDefs.Menu.find((item) => item.name === itemName);
+        if (!item) {
+            throw new Error(`Item with name "${itemName}" not found`);
+        }
+
+        orderingApi.addItemToOrder(itemName, undefined, [...item.toppings.filter(topping => topping != "lettuce")]);
+        orderingApi.respondToUser("Ok, I added a Hamburger with no cheese or onions. What else would you like?");
+    } catch(err) { 
+        console.error(err); 
+    }
+})();        
 ```
 
 log: Added Hamburger with id 2
@@ -88,5 +137,13 @@ user: I want an elephant.
 
 assistant:
 ```
-orderingApi.respondToUser("I'm sorry, but that isn't on our menu.");
+import * as ApiDefs from 'api.ts'
+
+(async() {
+    try {
+        orderingApi.respondToUser("I'm sorry, but that isn't on our menu.");
+    } catch(err) { 
+        console.error(err); 
+    }
+})();        
 ```
