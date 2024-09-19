@@ -340,10 +340,33 @@ const openai = new openai$1.OpenAI({
   apiKey: process.env.OPENAI_API_KEY
   // This is also the default, can be omitted
 });
+const CODE_START = `\`\`\`
+import * as ApiDefs from 'api.ts'
+
+(async() {
+    try {`;
+const CODE_END = `    } catch(err) { 
+        console.error(err); 
+    }
+})();        
+\`\`\``;
+function indentString(str, numTabs) {
+  const tabs = "	".repeat(numTabs);
+  return str.split("\n").map((line) => tabs + line).join("\n");
+}
+function replaceCodeBlocks(text) {
+  const codeBlockRegex = /```[\s\S]*?```/g;
+  return text.replace(codeBlockRegex, (match) => {
+    const code = match.slice(3, -3).trim();
+    return `${CODE_START}
+${indentString(code, 2)}
+${CODE_END}`;
+  });
+}
 function createBasePrompt(apiFilePath, documentationPath) {
   const apiText = fs.readFileSync(apiFilePath, "utf8");
   const documentationText = documentationPath ? fs.readFileSync(documentationPath, "utf8") : "";
-  const createTaskPrompt = fs.readFileSync(path.join(__dirname, "../prompts/create-task-prompt.md"), "utf8").replace("{{DOCUMENTATION}}", documentationText).replace("{{API}}", apiText);
+  const createTaskPrompt = fs.readFileSync(path.join(__dirname, "../prompts/create-task-prompt.md"), "utf8").replace("{{DOCUMENTATION}}", replaceCodeBlocks(documentationText)).replace("{{API}}", apiText);
   return createTaskPrompt;
 }
 const generateCode = async function(queryText, userChatHistory, createTaskPrompt, debug = false, model = "gpt-4o-mini") {
